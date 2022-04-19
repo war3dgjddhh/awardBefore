@@ -4,8 +4,17 @@ import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import styles from './index.less';
 import request from 'umi-request';
+import { ActionType } from '@ant-design/pro-table';
 
-export default ({ userId, isUpdate }: { userId?: number; isUpdate?: boolean }) => {
+export default ({
+  userId,
+  isUpdate,
+  actionRef,
+}: {
+  userId?: number;
+  isUpdate?: boolean;
+  actionRef: React.MutableRefObject<ActionType | undefined>;
+}) => {
   isUpdate = isUpdate || false;
   const [form] = Form.useForm<BasicApi.User>();
   const keyword = isUpdate ? '修改' : '创建';
@@ -29,6 +38,7 @@ export default ({ userId, isUpdate }: { userId?: number; isUpdate?: boolean }) =
       method,
       data: {
         ...values,
+        id: userId,
         // 创建时间
         createTime: moment().format('YYYY-MM-DD HH:MM:SS'),
         deleteUserId: 1,
@@ -37,6 +47,7 @@ export default ({ userId, isUpdate }: { userId?: number; isUpdate?: boolean }) =
     });
     if (code === 0) {
       message.success(msg);
+      actionRef?.current?.reload();
     } else {
       message.error(msg);
     }
