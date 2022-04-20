@@ -2,11 +2,11 @@ import { useRef } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Button, DatePicker, Popconfirm, Select, Space, Tag } from 'antd';
 import { request } from 'umi';
-import { Button, DatePicker, Select, Space, Tag } from 'antd';
-import Modal from './Modal';
 import moment from 'moment';
 import qs from 'qs';
+import Modal from './Modal';
 export default () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<BasicApi.User>[] = [
@@ -74,13 +74,31 @@ export default () => {
         return (
           <Space>
             <Modal isUpdate userId={record.id} actionRef={actionRef} />
-            <Button>删除</Button>
+            <Popconfirm
+              title={`是否确定删除用户编号为${record.id}的数据项?`}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button
+                onClick={() => {
+                  actionHandler(record.id);
+                }}
+              >
+                删除
+              </Button>
+            </Popconfirm>
             <Button>更多</Button>
           </Space>
         );
       },
     },
   ];
+  function actionHandler(id: number) {
+    console.log('id', id);
+    request(`/api/user/${[id]}`, {
+      method: 'delete',
+    });
+  }
   const tableToolBar = () => {
     return [<Modal actionRef={actionRef} />];
   };
