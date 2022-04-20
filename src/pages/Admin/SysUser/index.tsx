@@ -2,11 +2,23 @@ import { useRef, useState } from 'react';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, DatePicker, Popconfirm, Select, Space, Table, Tag } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Popconfirm,
+  Select,
+  Modal as AntdModal,
+  Space,
+  Table,
+  Tag,
+  message,
+} from 'antd';
 import moment from 'moment';
+const { confirm } = AntdModal;
 import { listUser, delUser } from '@/services/system/user';
 import Modal from './Modal';
 import { AlertRenderType } from '@ant-design/pro-table/lib/components/Alert';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 export default () => {
   const actionRef = useRef<ActionType>();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -131,10 +143,22 @@ export default () => {
     selectedRows.forEach((user) => {
       userIds.push(user.id);
     });
-    /**
-     * 这个批量删除应是当前用户的行为
-     */
-    delUser(userIds);
+    confirm({
+      title: `你确定要删除 ${selectedRows.length} 项?`,
+      icon: <ExclamationCircleOutlined />,
+      // content: 'Some descriptions',
+      onOk() {
+        delUser(userIds).then((res) => {
+          message.success('删除成功');
+          actionRef.current?.reload;
+          setSelectedRowKeys([]);
+          setSelectedRows([]);
+        });
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   }
   const proTableRequestHandler = async (
     _params: BasicApi.User & {
