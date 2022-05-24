@@ -1,18 +1,40 @@
 import { extend } from 'umi-request';
 import type { ResponseInterceptor } from 'umi-request';
 import qs from 'qs';
-// 配置响应拦截器
-const responseInterceptor: ResponseInterceptor = (
-  response: Response & { loading?: boolean },
-  options,
-) => {
-  console.log('请求拦截器已经生效了');
-  return response;
-};
+// // 配置响应拦截器
+// const responseInterceptor: ResponseInterceptor = (
+//   response: Response & { loading?: boolean },
+//   options,
+// ) => {
+//   console.log('请求拦截器已经生效了');
+//   return response;
+// };
 const request = extend({
   timeout: 3000,
 });
-request.interceptors.response.use(responseInterceptor);
+// request.interceptors.response.use(responseInterceptor);
+
+/** 登录接口 POST /api/login/account */
+export async function login(body: API.LoginResult, options?: { [key: string]: any }) {
+  return request<User.LoginResult>('/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 获取当前的用户 GET /api/currentUser */
+export async function currentUser(options?: { [key: string]: any }) {
+  return request<{
+    data: User.CurrentUser;
+  }>('/api/getCurrentUser', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
 
 // 查询用户列表
 export function listUser(query: object) {
