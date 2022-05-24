@@ -22,7 +22,7 @@
     path: '/admin',
     name: '系统管理',
     icon: 'crown',
-    access: 'canAdmin',
+    access: 'Admin',
     component: './Admin',
     routes: [
       {

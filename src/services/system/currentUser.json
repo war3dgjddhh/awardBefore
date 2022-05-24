@@ -1,0 +1,65 @@
+{
+  "code": 200,
+  "msg": "操作成功",
+  "data": {
+    "createTime": "2022-02-10 14:09:40",
+    "createUserId": 1,
+    "lastModifyTime": "2022-05-09 22:04:34",
+    "params": {},
+    "id": 2,
+    "username": "hello",
+    "nickname": "你是管理",
+    "email": "2778335106@qq.com",
+    "mobilePhone": "15632516615",
+    "position": "",
+    "fullName": "一般专家",
+    "address": "",
+    "roles": [
+      {
+        "createUserId": 0,
+        "lastModifyTime": "2022-03-22 20:00:35",
+        "params": {},
+        "name": "ADMIN",
+        "label": "管理员",
+        "menuCheckStrictly": false,
+        "enable": true,
+        "delFlag": "0"
+      },
+      {
+        "createUserId": 0,
+        "lastModifyTime": "2022-03-22 20:00:35",
+        "params": {},
+        "name": "EXPERT",
+        "label": "专家",
+        "menuCheckStrictly": false,
+        "enable": true,
+        "delFlag": "0"
+      },
+      {
+        "createUserId": 0,
+        "lastModifyTime": "2022-03-22 20:00:37",
+        "params": {},
+        "name": "NORMAL",
+        "label": "一般用户",
+        "menuCheckStrictly": false,
+        "enable": true,
+        "delFlag": "0"
+      }
+    ],
+    "enable": "1",
+    "delFlag": "0",
+    "enabled": true,
+    "authorities": [
+      {
+        "authority": "ROLE_ADMIN"
+      },
+      {
+        "authority": "ROLE_EXPERT"
+      },
+      {
+        "authority": "ROLE_NORMAL"
+      }
+    ],
+    "admin": false
+  }
+}

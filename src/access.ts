@@ -1,9 +1,13 @@
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { currentUser?: API.CurrentUser } | undefined) {
+export default function access(initialState: { currentUser?: User.CurrentUser } | undefined) {
   const { currentUser } = initialState ?? {};
   return {
-    canAdmin: currentUser && currentUser.access === 'admin',
+    Admin:
+      currentUser &&
+      currentUser.authorities.find((item) => {
+        return item.authority === 'ROLE_ADMIN';
+      }),
   };
 }

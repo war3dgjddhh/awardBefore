@@ -1,15 +1,30 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { SettingDrawer } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import type { RunTimeLayoutConfig } from 'umi';
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-
+import { currentUser as queryCurrentUser } from '@/services/system/user';
 import defaultSettings from '../config/defaultSettings';
 
 const loginPath = '/user/login';
+
+const authHeaderInterceptor = (url: string, options: any) => {
+  const token = localStorage.getItem('jwt');
+  const authHeader = { Authorization: `Bearer ${token}` };
+  console.log('清求拦截器生效了+你好+token:+', token);
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
+// 请求前拦截器
+export const request: RequestConfig = {
+  // 新增自动添加AccessToken的请求前拦截器
+  requestInterceptors: [authHeaderInterceptor],
+};
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -21,13 +36,17 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: User.CurrentUser;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<User.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
       const msg = await queryCurrentUser();
+      if (msg?.data?.email !== '') {
+        history.push(loginPath);
+      }
+      console.log(msg);
       return msg.data;
     } catch (error) {
       history.push(loginPath);
